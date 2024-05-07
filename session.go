@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	ws "github.com/gorilla/websocket"
 )
@@ -61,7 +62,7 @@ func (c *Session) closeConnect() {
 	//LogInfo(c.SessionID(), " connection closed")
 	if c.conn != nil {
 		if err := c.conn.Close(); err != nil {
-			LogErrorf("disconnect error: %s", err.Error())
+			return
 		}
 		c.conn = nil
 	}
@@ -95,7 +96,7 @@ func (c *Session) sendBinaryMessage(message []byte) error {
 	return c.conn.WriteMessage(ws.BinaryMessage, message)
 }
 
-func (c *Session) writePump() {
+func (c *Session) writePump() error {
 	defer c.Close()
 
 	for {
@@ -105,15 +106,13 @@ func (c *Session) writePump() {
 			switch c.server.msgType {
 			case MsgTypeBinary:
 				if err = c.sendBinaryMessage(msg); err != nil {
-					LogError("write binary message error: ", err)
-					return
+					return err
 				}
 				break
 
 			case MsgTypeText:
 				if err = c.sendTextMessage(string(msg)); err != nil {
-					LogError("write text message error: ", err)
-					return
+					return err
 				}
 				break
 			}
@@ -133,7 +132,7 @@ func (c *Session) readPump() {
 		messageType, data, err := c.conn.ReadMessage()
 		if err != nil {
 			if ws.IsUnexpectedCloseError(err, ws.CloseNormalClosure, ws.CloseGoingAway, ws.CloseAbnormalClosure) {
-				LogErrorf("read message error: %v", err)
+				fmt.Println("read message error:", err)
 			}
 			return
 		}
@@ -152,7 +151,7 @@ func (c *Session) readPump() {
 
 		case ws.PingMessage:
 			if err = c.sendPongMessage(""); err != nil {
-				LogError("write pong message error: ", err)
+				fmt.Println("write pong message error: ", err)
 				return
 			}
 			break

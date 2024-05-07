@@ -1,7 +1,6 @@
 package websocket
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"os/signal"
@@ -56,8 +55,6 @@ func TestServer(t *testing.T) {
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
-	ctx := context.Background()
-
 	srv := NewServer(
 		WithAddress(":10029"),
 		WithPath("/"),
@@ -72,12 +69,12 @@ func TestServer(t *testing.T) {
 
 	testServer = srv
 
-	if err := srv.Start(ctx); err != nil {
+	if err := srv.Start(); err != nil {
 		panic(err)
 	}
 
 	defer func() {
-		if err := srv.Stop(ctx); err != nil {
+		if err := srv.Stop(); err != nil {
 			t.Errorf("expected nil got %v", err)
 		}
 	}()

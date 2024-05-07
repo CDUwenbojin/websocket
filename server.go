@@ -5,6 +5,8 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
+	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/transport"
 	"net"
 	"net/http"
 	"net/url"
@@ -12,9 +14,12 @@ import (
 	"time"
 
 	"github.com/go-kratos/kratos/v2/encoding"
-	"github.com/go-kratos/kratos/v2/transport"
-
 	ws "github.com/gorilla/websocket"
+)
+
+const (
+	KindWebsocket transport.Kind = "websocket"
+	loggerName                   = "transport/websocket"
 )
 
 type Binder func() Message
@@ -29,10 +34,12 @@ type HandlerData struct {
 }
 type MessageHandlerMap map[MessageCmd]*HandlerData
 
-var (
-	_ transport.Server     = (*Server)(nil)
-	_ transport.Endpointer = (*Server)(nil)
-)
+// Logger with server logger.
+func Logger(logger log.Logger) ServerOption {
+	return func(s *Server) {
+		s.log = log.NewHelper(loggerName, logger)
+	}
+}
 
 type Server struct {
 	*http.Server
@@ -59,6 +66,7 @@ type Server struct {
 	unregister chan *Session
 
 	msgType MsgType
+	log     *log.Helper
 }
 
 func NewServer(opts ...ServerOption) *Server {
@@ -82,6 +90,7 @@ func NewServer(opts ...ServerOption) *Server {
 		unregister: make(chan *Session),
 
 		msgType: MsgTypeBinary,
+		log:     log.NewHelper(loggerName, log.DefaultLogger),
 	}
 
 	srv.init(opts...)
@@ -128,7 +137,6 @@ func RegisterServerMessageHandler[T any](srv *Server, cmd MessageCmd, handler fu
 			case *T:
 				return handler(sessionId, t)
 			default:
-				LogError("invalid message struct type:", t)
 				return errors.New("invalid message struct type")
 			}
 		},
@@ -143,32 +151,31 @@ func (s *Server) DeregisterMessageHandler(cmd MessageCmd) {
 	delete(s.messageHandlers, cmd)
 }
 
-func (s *Server) SendMessage(sessionId SessionID, message Message) {
+func (s *Server) SendMessage(sessionId SessionID, message Message) error {
 	c, ok := s.sessionMgr.Get(sessionId)
 	if !ok {
-		LogError("session not found:", sessionId)
-		return
+		return fmt.Errorf("session not found: %s", sessionId)
 	}
 
 	buf, err := s.marshalMessage(message)
 	if err != nil {
-		LogError("marshal message exception:", err)
-		return
+		return err
 	}
 
 	c.SendMessage(buf)
+	return nil
 }
 
-func (s *Server) Broadcast(cmd MessageCmd, message Message) {
+func (s *Server) Broadcast(message Message) error {
 	buf, err := s.marshalMessage(message)
 	if err != nil {
-		LogError(" marshal message exception:", err)
-		return
+		return err
 	}
 
 	s.sessionMgr.Range(func(session *Session) {
 		session.SendMessage(buf)
 	})
+	return nil
 }
 
 func (s *Server) marshalMessage(message Message) ([]byte, error) {
@@ -206,24 +213,20 @@ func (s *Server) unmarshalMessage(msgWithLength []byte) (*HandlerData, Message, 
 
 	msgWithoutLength, length, err = LengthUnmarshal(msgWithLength, s.msgType)
 	if err != nil {
-		LogError("lengthUnmarshal message exception:", err)
 		return nil, nil, fmt.Errorf("lengthUnmarshal message exception:%v", err)
 	}
 
 	if int(length) != len(msgWithoutLength) {
-		LogError("incomplete message")
 		return nil, nil, fmt.Errorf("incomplete message")
 	}
 
 	err = CodecUnmarshal(s.codec, msgWithoutLength, &baseMsg)
 	if err != nil {
-		LogError("parse the Json command failed:", err)
 		return nil, nil, fmt.Errorf("parse the Json command failed:%v", err)
 	}
 
 	handler, ok = s.messageHandlers[baseMsg.Command]
 	if !ok {
-		LogError("message handler not found:", baseMsg.Command)
 		return nil, nil, errors.New("message handler not found")
 	}
 
@@ -231,11 +234,9 @@ func (s *Server) unmarshalMessage(msgWithLength []byte) (*HandlerData, Message, 
 		message = handler.Binder()
 		err = CodecUnmarshal(s.codec, msgWithoutLength, &message)
 		if err != nil {
-			LogError("parse the Json failed:", err)
 			return nil, nil, fmt.Errorf("parse the Json failed:%v", err)
 		}
 	} else {
-		LogError("message Binder not found:", baseMsg.Command)
 		return nil, nil, errors.New("message Binder not found")
 	}
 
@@ -248,13 +249,10 @@ func (s *Server) messageHandler(sessionId SessionID, buf []byte) error {
 	var message Message
 
 	if handler, message, err = s.unmarshalMessage(buf); err != nil {
-		LogErrorf("unmarshal message failed: %s", err)
 		return err
 	}
-	//LogDebug(payload)
 
 	if err = handler.Handler(sessionId, message); err != nil {
-		LogErrorf("message handler failed: %s", err)
 		return err
 	}
 
@@ -264,7 +262,6 @@ func (s *Server) messageHandler(sessionId SessionID, buf []byte) error {
 func (s *Server) wsHandler(res http.ResponseWriter, req *http.Request) {
 	conn, err := s.upgrader.Upgrade(res, req, nil)
 	if err != nil {
-		LogError("upgrade exception:", err)
 		return
 	}
 
@@ -272,6 +269,7 @@ func (s *Server) wsHandler(res http.ResponseWriter, req *http.Request) {
 	session.server.register <- session
 
 	session.Listen()
+	return
 }
 
 func (s *Server) listen() error {
@@ -326,8 +324,7 @@ func (s *Server) Start() error {
 	s.BaseContext = func(net.Listener) context.Context {
 		return ctx
 	}
-	LogInfof("server listening on: %s", s.lis.Addr().String())
-
+	s.log.Infof("[websocket] server listening on: %s", s.lis.Addr().String())
 	go s.run()
 
 	var err error
@@ -343,6 +340,6 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) Stop() error {
-	LogInfo("server stopping")
+	s.log.Info("[websocket] server stopping")
 	return s.Shutdown(context.Background())
 }

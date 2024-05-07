@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-kratos/kratos/v2/encoding"
+	"github.com/go-kratos/kratos/v2/log"
 	"net/url"
 	"time"
 
@@ -33,6 +34,7 @@ type Client struct {
 	timeout time.Duration
 
 	msgType MsgType
+	log     *log.Helper
 }
 
 func NewClient(opts ...ClientOption) *Client {
@@ -42,6 +44,7 @@ func NewClient(opts ...ClientOption) *Client {
 		codec:           encoding.GetCodec("json"),
 		messageHandlers: make(ClientMessageHandlerMap),
 		msgType:         MsgTypeBinary,
+		log:             log.NewHelper(loggerName, log.DefaultLogger),
 	}
 
 	cli.init(opts...)
@@ -62,11 +65,11 @@ func (c *Client) Connect() error {
 		return errors.New("endpoint is nil")
 	}
 
-	LogInfof("connecting to %s", c.endpoint.String())
+	c.log.Infof("connecting to %s", c.endpoint.String())
 
 	conn, resp, err := ws.DefaultDialer.Dial(c.endpoint.String(), nil)
 	if err != nil {
-		LogErrorf("%s [%v]", err.Error(), resp)
+		c.log.Errorf("%s [%v]", err.Error(), resp)
 		return err
 	}
 	c.conn = conn
@@ -79,7 +82,7 @@ func (c *Client) Connect() error {
 func (c *Client) Disconnect() {
 	if c.conn != nil {
 		if err := c.conn.Close(); err != nil {
-			LogErrorf("disconnect error: %s", err.Error())
+			c.log.Errorf("disconnect error: %s", err.Error())
 		}
 		c.conn = nil
 	}
@@ -100,7 +103,6 @@ func RegisterClientMessageHandler[T any](cli *Client, cmd MessageCmd, handler fu
 			case *T:
 				return handler(t)
 			default:
-				LogError("invalid payload struct type:", t)
 				return errors.New("invalid payload struct type")
 			}
 		},
@@ -118,7 +120,6 @@ func (c *Client) DeregisterMessageHandler(cmd MessageCmd) {
 func (c *Client) SendMessage(message interface{}) error {
 	buff, err := c.marshalMessage(message)
 	if err != nil {
-		LogError("marshal message exception:", err)
 		return err
 	}
 
@@ -162,7 +163,7 @@ func (c *Client) run() {
 		messageType, data, err := c.conn.ReadMessage()
 		if err != nil {
 			if ws.IsUnexpectedCloseError(err, ws.CloseNormalClosure, ws.CloseGoingAway, ws.CloseAbnormalClosure) {
-				LogErrorf("read message error: %v", err)
+				c.log.Errorf("read message error: %v", err)
 			}
 			return
 		}
@@ -181,7 +182,7 @@ func (c *Client) run() {
 
 		case ws.PingMessage:
 			if err := c.sendPongMessage(""); err != nil {
-				LogError("write pong message error: ", err)
+				fmt.Println("write pong message error: ", err)
 				return
 			}
 			break
@@ -228,24 +229,20 @@ func (c *Client) unmarshalMessage(msgWithLength []byte) (*ClientHandlerData, Mes
 
 	msgWithoutLength, length, err = LengthUnmarshal(msgWithLength, c.msgType)
 	if err != nil {
-		LogError("lengthUnmarshal message exception:", err)
 		return nil, nil, fmt.Errorf("lengthUnmarshal message exception:%v", err)
 	}
 
 	if int(length) != len(msgWithoutLength) {
-		LogError("incomplete message")
 		return nil, nil, fmt.Errorf("incomplete message")
 	}
 
 	err = CodecUnmarshal(c.codec, msgWithoutLength, &baseMsg)
 	if err != nil {
-		LogError("parse the Json command failed:", err)
 		return nil, nil, fmt.Errorf("parse the Json command failed:%v", err)
 	}
 
 	handler, ok = c.messageHandlers[baseMsg.Command]
 	if !ok {
-		LogError("message handler not found:", baseMsg.Command)
 		return nil, nil, errors.New("message handler not found")
 	}
 
@@ -253,11 +250,9 @@ func (c *Client) unmarshalMessage(msgWithLength []byte) (*ClientHandlerData, Mes
 		message = handler.Binder()
 		err = CodecUnmarshal(c.codec, msgWithoutLength, &message)
 		if err != nil {
-			LogError("parse the Json failed:", err)
 			return nil, nil, fmt.Errorf("parse the Json failed:%v", err)
 		}
 	} else {
-		LogError("message Binder not found:", baseMsg.Command)
 		return nil, nil, errors.New("message Binder not found")
 	}
 
@@ -270,13 +265,11 @@ func (c *Client) messageHandler(buf []byte) error {
 	var message Message
 
 	if handler, message, err = c.unmarshalMessage(buf); err != nil {
-		LogErrorf("unmarshal message failed: %s", err)
 		return err
 	}
 	//LogDebug(payload)
 
 	if err = handler.Handler(message); err != nil {
-		LogErrorf("message handler exception: %s", err)
 		return err
 	}
 
