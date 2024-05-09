@@ -19,8 +19,12 @@ type Message Any
 
 type BaseMsg struct {
 	Command MessageCmd `json:"Command"`
-	RetCode int        `json:"RetCode"`
-	RetMsg  string     `json:"RetMsg"`
+}
+
+type BaseRetMsg struct {
+	BaseMsg
+	RetCode int    `json:"RetCode"`
+	RetMsg  string `json:"RetMsg"`
 }
 
 // AI服务报文
@@ -33,6 +37,7 @@ type ReqServiceMsg struct {
 		Demand   string `json:"Demand"`
 		Size     int    `json:"Size"`
 		Train    struct {
+			JobName  string `json:"JobName"`
 			Algoritm string `json:"Algoritm"`
 			Image    string `json:"Image"`
 		} `json:"Train"`
@@ -46,9 +51,9 @@ type ReqServiceMsg struct {
 
 // AI服务报文应答
 type ReqServiceRetMsg struct {
-	BaseMsg
+	BaseRetMsg
 	Payload struct {
-		TaskID  string `json:"TaskID"`
+		JobID   string `json:"JobID"`
 		RunTime int    `json:"RunTime"`
 		State   int    `json:"State"`
 		Info    string `json:"Info"`
@@ -61,16 +66,16 @@ type ControlMsg struct {
 	BaseMsg
 	Payload struct {
 		ID      int    `json:"ID"`
-		TaskID  string `json:"TaskID"`
+		JobID   string `json:"JobID"`
 		Control string `json:"Control"`
 	} `json:"Payload"`
 }
 
 // AI服务控制报文应答
 type ControlRetMsg struct {
-	BaseMsg
+	BaseRetMsg
 	Payload struct {
-		TaskID  string `json:"TaskID"`
+		JobID   string `json:"JobID"`
 		RunTime int    `json:"RunTime"`
 		State   int    `json:"State"`
 		Info    string `json:"Info"`
@@ -83,7 +88,7 @@ type NoticeMsg struct {
 	BaseMsg
 	Payload struct {
 		ID      int    `json:"ID"`
-		TaskID  string `json:"TaskID"`
+		JobID   string `json:"JobID"`
 		RunTime int    `json:"RunTime"`
 		State   int    `json:"State"`
 		Info    string `json:"Info"`
@@ -92,7 +97,7 @@ type NoticeMsg struct {
 }
 
 type NoticeRetMsg struct {
-	BaseMsg
+	BaseRetMsg
 	Payload struct {
 		ID int `json:"ID"`
 	} `json:"Payload"`
