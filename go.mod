@@ -1,4 +1,4 @@
-module git/websocket
+module github.com/CDUwenbojin/websocket
 
 go 1.22.2
 
