@@ -70,8 +70,6 @@ func TestClient(t *testing.T) {
 	reqServiceMsg := ReqServiceMsg{
 		BaseMsg: BaseMsg{
 			Command: "reqService",
-			RetCode: 0,
-			RetMsg:  "Success",
 		},
 		Payload: struct {
 			ID       int    `json:"ID"`
@@ -80,6 +78,7 @@ func TestClient(t *testing.T) {
 			Demand   string `json:"Demand"`
 			Size     int    `json:"Size"`
 			Train    struct {
+				JobName  string `json:"JobName"`
 				Algoritm string `json:"Algoritm"`
 				Image    string `json:"Image"`
 			} `json:"Train"`
@@ -95,9 +94,11 @@ func TestClient(t *testing.T) {
 			Demand:   "High",
 			Size:     100,
 			Train: struct {
+				JobName  string `json:"JobName"`
 				Algoritm string `json:"Algoritm"`
 				Image    string `json:"Image"`
 			}{
+				JobName:  "Sample Data",
 				Algoritm: "Algorithm1",
 				Image:    "Image1",
 			},

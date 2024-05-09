@@ -22,13 +22,13 @@ func handleConnect(sessionId SessionID, register bool) {
 func handleReqServiceMsg(sessionId SessionID, message *ReqServiceMsg) error {
 	fmt.Printf("[%s] message: %v\n", sessionId, message)
 
-	retMsg := ReqServiceRetMsg{BaseMsg: BaseMsg{message.Command + "Ret", message.Payload.ID, "AS"}, Payload: struct {
-		TaskID  string `json:"TaskID"`
+	retMsg := ReqServiceRetMsg{BaseRetMsg: BaseRetMsg{BaseMsg: BaseMsg{message.Command + "Ret"}, RetCode: message.Payload.ID, RetMsg: "AS"}, Payload: struct {
+		JobID   string `json:"JobID"`
 		RunTime int    `json:"RunTime"`
 		State   int    `json:"State"`
 		Info    string `json:"Info"`
 		Result  string `json:"Result"`
-	}{TaskID: "ASSA", RunTime: 1, State: 1, Info: "sa", Result: "qsqw"}}
+	}{JobID: "ASSA", RunTime: 1, State: 1, Info: "sa", Result: "qsqw"}}
 
 	testServer.SendMessage(sessionId, retMsg)
 
