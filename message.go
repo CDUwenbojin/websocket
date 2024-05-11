@@ -31,21 +31,21 @@ type BaseRetMsg struct {
 type ReqServiceMsg struct {
 	BaseMsg
 	Payload struct {
-		ID       int    `json:"ID"`
-		Data     string `json:"Data"`
-		DataType string `json:"DataType"`
-		Demand   string `json:"Demand"`
-		Size     int    `json:"Size"`
-		Train    struct {
-			JobName  string `json:"JobName"`
-			Algoritm string `json:"Algoritm"`
-			Image    string `json:"Image"`
+		ID     int    `json:"ID"`
+		Demand string `json:"Demand"`
+		Train  struct {
+			JobName         string `json:"JobName"`
+			AlgoritmName    string `json:"AlgoritmName"`
+			AlgoritmVersion string `json:"AlgoritmVersion"`
+			ImageName       string `json:"ImageName"`
+			ImageVersion    string `json:"ImageVersion"`
 		} `json:"Train"`
 		Deduce struct {
 			Service string `json:"Service"`
 		} `json:"Deduce"`
 		ResourcePool string `json:"ResourcePool"`
 		ResourceSpec string `json:"ResourceSpec"`
+		UserName     string `json:"UserName"`
 	} `json:"Payload"`
 }
 

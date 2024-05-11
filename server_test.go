@@ -9,7 +9,6 @@ import (
 )
 
 var testServer *Server
-var i int
 
 func handleConnect(sessionId SessionID, register bool) {
 	if register {
@@ -22,15 +21,7 @@ func handleConnect(sessionId SessionID, register bool) {
 func handleReqServiceMsg(sessionId SessionID, message *ReqServiceMsg) error {
 	fmt.Printf("[%s] message: %v\n", sessionId, message)
 
-	retMsg := ReqServiceRetMsg{BaseRetMsg: BaseRetMsg{BaseMsg: BaseMsg{message.Command + "Ret"}, RetCode: message.Payload.ID, RetMsg: "AS"}, Payload: struct {
-		JobID   string `json:"JobID"`
-		RunTime int    `json:"RunTime"`
-		State   int    `json:"State"`
-		Info    string `json:"Info"`
-		Result  string `json:"Result"`
-	}{JobID: "ASSA", RunTime: 1, State: 1, Info: "sa", Result: "qsqw"}}
-
-	testServer.SendMessage(sessionId, retMsg)
+	//testServer.SendMessage(sessionId, retMsg)
 
 	return nil
 }

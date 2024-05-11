@@ -10,7 +10,6 @@ import (
 	"os/signal"
 	"syscall"
 	"testing"
-	"time"
 )
 
 var testClient *Client
@@ -44,8 +43,6 @@ func sendMessage(msg interface{}) error {
 	return testClient.SendMessage(msg)
 }
 
-var num int
-
 func TestClient(t *testing.T) {
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
@@ -67,62 +64,6 @@ func TestClient(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	reqServiceMsg := ReqServiceMsg{
-		BaseMsg: BaseMsg{
-			Command: "reqService",
-		},
-		Payload: struct {
-			ID       int    `json:"ID"`
-			Data     string `json:"Data"`
-			DataType string `json:"DataType"`
-			Demand   string `json:"Demand"`
-			Size     int    `json:"Size"`
-			Train    struct {
-				JobName  string `json:"JobName"`
-				Algoritm string `json:"Algoritm"`
-				Image    string `json:"Image"`
-			} `json:"Train"`
-			Deduce struct {
-				Service string `json:"Service"`
-			} `json:"Deduce"`
-			ResourcePool string `json:"ResourcePool"`
-			ResourceSpec string `json:"ResourceSpec"`
-		}{
-			ID:       0,
-			Data:     "Sample Data",
-			DataType: "Text",
-			Demand:   "High",
-			Size:     100,
-			Train: struct {
-				JobName  string `json:"JobName"`
-				Algoritm string `json:"Algoritm"`
-				Image    string `json:"Image"`
-			}{
-				JobName:  "Sample Data",
-				Algoritm: "Algorithm1",
-				Image:    "Image1",
-			},
-			Deduce: struct {
-				Service string `json:"Service"`
-			}{
-				Service: "DeduceService",
-			},
-			ResourcePool: "Pool1",
-			ResourceSpec: "Spec1",
-		},
-	}
-
-	timer1 := time.NewTicker(3 * time.Second)
-	go func() {
-		for {
-			select {
-			case <-timer1.C:
-				reqServiceMsg.Payload.ID = num
-				num++
-				_ = sendMessage(reqServiceMsg)
-			}
-		}
-	}()
 
 	<-interrupt
 }
