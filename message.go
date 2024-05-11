@@ -39,6 +39,7 @@ type ReqServiceMsg struct {
 			AlgoritmVersion string `json:"AlgoritmVersion"`
 			ImageName       string `json:"ImageName"`
 			ImageVersion    string `json:"ImageVersion"`
+			DataSetPath     string `json:"DataSetPath"`
 		} `json:"Train"`
 		Deduce struct {
 			Service string `json:"Service"`
