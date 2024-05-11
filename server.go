@@ -180,8 +180,8 @@ func (s *Server) Broadcast(message Message) error {
 
 func (s *Server) marshalMessage(message Message) ([]byte, error) {
 	var (
-		codecJsonMsg,
-		msgWithLength []byte
+		codecJsonMsg []byte
+		//		msgWithLength []byte
 		err error
 	)
 
@@ -190,37 +190,37 @@ func (s *Server) marshalMessage(message Message) ([]byte, error) {
 		return nil, err
 	}
 
-	msgWithLength, err = LengthMarshal(codecJsonMsg, s.msgType)
-	if err != nil {
-		return nil, err
-	}
+	//msgWithLength, err = LengthMarshal(codecJsonMsg, s.msgType)
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	//LogInfo("msgWithLength:", string(msgWithLength))
 
-	return msgWithLength, nil
+	return codecJsonMsg, nil
 }
 
 func (s *Server) unmarshalMessage(msgWithLength []byte) (*HandlerData, Message, error) {
 	var (
-		msgWithoutLength []byte
-		length           uint32
-		handler          *HandlerData
-		message          Message
-		baseMsg          BaseMsg
-		ok               bool
-		err              error
+		//	msgWithoutLength []byte
+		//	length           uint32
+		handler *HandlerData
+		message Message
+		baseMsg BaseMsg
+		ok      bool
+		err     error
 	)
 
-	msgWithoutLength, length, err = LengthUnmarshal(msgWithLength, s.msgType)
-	if err != nil {
-		return nil, nil, fmt.Errorf("lengthUnmarshal message exception:%v", err)
-	}
+	//msgWithoutLength, length, err = LengthUnmarshal(msgWithLength, s.msgType)
+	//if err != nil {
+	//	return nil, nil, fmt.Errorf("lengthUnmarshal message exception:%v", err)
+	//}
+	//
+	//if int(length) != len(msgWithoutLength) {
+	//	return nil, nil, fmt.Errorf("incomplete message")
+	//}
 
-	if int(length) != len(msgWithoutLength) {
-		return nil, nil, fmt.Errorf("incomplete message")
-	}
-
-	err = CodecUnmarshal(s.codec, msgWithoutLength, &baseMsg)
+	err = CodecUnmarshal(s.codec, msgWithLength, &baseMsg)
 	if err != nil {
 		return nil, nil, fmt.Errorf("parse the Json command failed:%v", err)
 	}
@@ -232,7 +232,7 @@ func (s *Server) unmarshalMessage(msgWithLength []byte) (*HandlerData, Message, 
 
 	if handler.Binder != nil {
 		message = handler.Binder()
-		err = CodecUnmarshal(s.codec, msgWithoutLength, &message)
+		err = CodecUnmarshal(s.codec, msgWithLength, &message)
 		if err != nil {
 			return nil, nil, fmt.Errorf("parse the Json failed:%v", err)
 		}
