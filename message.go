@@ -40,12 +40,23 @@ type ReqServiceMsg struct {
 			ImageName       string `json:"ImageName"`
 			ImageVersion    string `json:"ImageVersion"`
 			DataSetPath     string `json:"DataSetPath"`
+			Config          []struct {
+				Name           string `json:"name"`
+				Command        string `json:"command"`
+				ResourceSpecId string `json:"resourceSpecId"`
+				Parameters     []struct {
+					Key   string `json:"key"`
+					Value string `json:"value"`
+				} `json:"parameters"`
+				TaskNumber            int `json:"taskNumber"`
+				MinFailedTaskCount    int `json:"minFailedTaskCount"`
+				MinSucceededTaskCount int `json:"minSucceededTaskCount"`
+			} `json:"Config"`
 		} `json:"Train"`
 		Deduce struct {
 			Service string `json:"Service"`
 		} `json:"Deduce"`
 		ResourcePool string `json:"ResourcePool"`
-		ResourceSpec string `json:"ResourceSpec"`
 		UserName     string `json:"UserName"`
 	} `json:"Payload"`
 }
