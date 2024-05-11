@@ -41,10 +41,10 @@ type ReqServiceMsg struct {
 			ImageVersion    string `json:"ImageVersion"`
 			DataSetPath     string `json:"DataSetPath"`
 			Config          []struct {
-				Name           string `json:"name"`
-				Command        string `json:"command"`
-				ResourceSpecId string `json:"resourceSpecId"`
-				Parameters     []struct {
+				Name             string `json:"name"`
+				Command          string `json:"command"`
+				ResourceSpecName string `json:"resourceSpecName"`
+				Parameters       []struct {
 					Key   string `json:"key"`
 					Value string `json:"value"`
 				} `json:"parameters"`
