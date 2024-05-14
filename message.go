@@ -65,6 +65,7 @@ type ReqServiceMsg struct {
 type ReqServiceRetMsg struct {
 	BaseRetMsg
 	Payload struct {
+		Demand  string `json:"Demand"`
 		JobID   string `json:"JobID"`
 		RunTime int    `json:"RunTime"`
 		State   int    `json:"State"`
@@ -77,9 +78,9 @@ type ReqServiceRetMsg struct {
 type ControlMsg struct {
 	BaseMsg
 	Payload struct {
-		ID      int    `json:"ID"`
-		JobID   string `json:"JobID"`
-		Control string `json:"Control"`
+		ID     int    `json:"ID"`
+		JobID  string `json:"JobID"`
+		Demand string `json:"Demand"`
 	} `json:"Payload"`
 }
 
@@ -87,6 +88,7 @@ type ControlMsg struct {
 type ControlRetMsg struct {
 	BaseRetMsg
 	Payload struct {
+		Demand  string `json:"Demand"`
 		JobID   string `json:"JobID"`
 		RunTime int    `json:"RunTime"`
 		State   int    `json:"State"`
@@ -99,6 +101,7 @@ type ControlRetMsg struct {
 type NoticeMsg struct {
 	BaseMsg
 	Payload struct {
+		Demand  string `json:"Demand"`
 		ID      int    `json:"ID"`
 		JobID   string `json:"JobID"`
 		RunTime int    `json:"RunTime"`
@@ -111,7 +114,8 @@ type NoticeMsg struct {
 type NoticeRetMsg struct {
 	BaseRetMsg
 	Payload struct {
-		ID int `json:"ID"`
+		Demand string `json:"Demand"`
+		JobID  string `json:"JobID"`
 	} `json:"Payload"`
 }
 
