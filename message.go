@@ -23,7 +23,7 @@ type BaseMsg struct {
 
 type BaseRetMsg struct {
 	BaseMsg
-	RetCode int64  `json:"RetCode"`
+	RetCode int32  `json:"RetCode"`
 	RetMsg  string `json:"RetMsg"`
 }
 
@@ -65,12 +65,12 @@ type ReqServiceMsg struct {
 type ReqServiceRetMsg struct {
 	BaseRetMsg
 	Payload struct {
-		Demand  string `json:"Demand"`
-		JobID   string `json:"JobID"`
-		RunTime int64  `json:"RunTime"`
-		State   int64  `json:"State"`
-		Info    string `json:"Info"`
-		Result  string `json:"Result"`
+		Demand string `json:"Demand"`
+		JobID  string `json:"JobID"`
+		RunSec int64  `json:"RunSec"`
+		State  int32  `json:"State"`
+		Info   string `json:"Info"`
+		Result string `json:"Result"`
 	} `json:"Payload"`
 }
 
@@ -91,7 +91,7 @@ type ControlRetMsg struct {
 		Demand   string `json:"Demand"`
 		JobID    string `json:"JobID"`
 		RunSec   int64  `json:"RunSec"`
-		State    int64  `json:"State"`
+		State    int32  `json:"State"`
 		Info     string `json:"Info"`
 		Result   string `json:"Result"`
 		CancelAt int64  `json:"CancelAt"`
@@ -106,7 +106,7 @@ type NoticeMsg struct {
 		ID     int64  `json:"ID"`
 		JobID  string `json:"JobID"`
 		RunSec int64  `json:"RunSec"`
-		State  int64  `json:"State"`
+		State  int32  `json:"State"`
 		Info   string `json:"Info"`
 		Result string `json:"Result"`
 	} `json:"Payload"`
