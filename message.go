@@ -23,7 +23,7 @@ type BaseMsg struct {
 
 type BaseRetMsg struct {
 	BaseMsg
-	RetCode int    `json:"RetCode"`
+	RetCode int64  `json:"RetCode"`
 	RetMsg  string `json:"RetMsg"`
 }
 
@@ -31,7 +31,7 @@ type BaseRetMsg struct {
 type ReqServiceMsg struct {
 	BaseMsg
 	Payload struct {
-		ID     int    `json:"ID"`
+		ID     int64  `json:"ID"`
 		Demand string `json:"Demand"`
 		Train  struct {
 			JobName         string `json:"JobName"`
@@ -67,8 +67,8 @@ type ReqServiceRetMsg struct {
 	Payload struct {
 		Demand  string `json:"Demand"`
 		JobID   string `json:"JobID"`
-		RunTime int    `json:"RunTime"`
-		State   int    `json:"State"`
+		RunTime int64  `json:"RunTime"`
+		State   int64  `json:"State"`
 		Info    string `json:"Info"`
 		Result  string `json:"Result"`
 	} `json:"Payload"`
@@ -78,7 +78,7 @@ type ReqServiceRetMsg struct {
 type ControlMsg struct {
 	BaseMsg
 	Payload struct {
-		ID     int    `json:"ID"`
+		ID     int64  `json:"ID"`
 		JobID  string `json:"JobID"`
 		Demand string `json:"Demand"`
 	} `json:"Payload"`
@@ -88,12 +88,13 @@ type ControlMsg struct {
 type ControlRetMsg struct {
 	BaseRetMsg
 	Payload struct {
-		Demand  string `json:"Demand"`
-		JobID   string `json:"JobID"`
-		RunTime int    `json:"RunTime"`
-		State   int    `json:"State"`
-		Info    string `json:"Info"`
-		Result  string `json:"Result"`
+		Demand   string `json:"Demand"`
+		JobID    string `json:"JobID"`
+		RunSec   int64  `json:"RunSec"`
+		State    int64  `json:"State"`
+		Info     string `json:"Info"`
+		Result   string `json:"Result"`
+		CancelAt int64  `json:"CancelAt"`
 	} `json:"Payload"`
 }
 
@@ -101,13 +102,13 @@ type ControlRetMsg struct {
 type NoticeMsg struct {
 	BaseMsg
 	Payload struct {
-		Demand  string `json:"Demand"`
-		ID      int    `json:"ID"`
-		JobID   string `json:"JobID"`
-		RunTime int    `json:"RunTime"`
-		State   int    `json:"State"`
-		Info    string `json:"Info"`
-		Result  string `json:"Result"`
+		Demand string `json:"Demand"`
+		ID     int64  `json:"ID"`
+		JobID  string `json:"JobID"`
+		RunSec int64  `json:"RunSec"`
+		State  int64  `json:"State"`
+		Info   string `json:"Info"`
+		Result string `json:"Result"`
 	} `json:"Payload"`
 }
 
