@@ -23,7 +23,7 @@ type BaseMsg struct {
 
 type BaseRetMsg struct {
 	BaseMsg
-	RetCode int32  `json:"RetCode"`
+	RetCode int64  `json:"RetCode"`
 	RetMsg  string `json:"RetMsg"`
 }
 
