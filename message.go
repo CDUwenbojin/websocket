@@ -18,98 +18,110 @@ type MessageCmd string
 type Message Any
 
 type BaseMsg struct {
-	Command MessageCmd `json:"command"`
+	Command MessageCmd `json:"Command"`
 }
 
 type BaseRetMsg struct {
 	BaseMsg
-	RetCode int64  `json:"retCode"`
-	RetMsg  string `json:"retMsg"`
+	RetCode int64  `json:"RetCode"`
+	RetMsg  string `json:"RetMsg"`
 }
 
 // AI服务报文
 type ReqServiceMsg struct {
 	BaseMsg
 	Payload struct {
-		Id     int64  `json:"id"`
-		Demand string `json:"demand"`
+		ID     int64  `json:"ID"`
+		Demand string `json:"Demand"`
 		Train  struct {
-			JobName         string `json:"jobName"`
-			AlgoritmName    string `json:"algoritmName"`
-			AlgoritmVersion string `json:"algoritmVersion"`
-			ImageName       string `json:"imageName"`
-			ImageVersion    string `json:"imageVersion"`
-			DataSetPath     string `json:"dataSetPath"`
+			AlgoritmName    string `json:"AlgoritmName"`
+			AlgoritmVersion string `json:"AlgoritmVersion"`
+			ImageName       string `json:"ImageName"`
+			ImageVersion    string `json:"ImageVersion"`
+			DataSetPath     string `json:"DataSetPath"`
 			Config          []struct {
-				Name             string `json:"name"`
-				Command          string `json:"command"`
-				ResourceSpecName string `json:"resourceSpecName"`
+				Command          string `json:"Command"`
+				ResourceSpecName string `json:"ResourceSpecName"`
 				Parameters       []struct {
-					Key   string `json:"key"`
-					Value string `json:"value"`
-				} `json:"parameters"`
-				TaskNumber            int `json:"taskNumber"`
-				MinFailedTaskCount    int `json:"minFailedTaskCount"`
-				MinSucceededTaskCount int `json:"minSucceededTaskCount"`
-			} `json:"config"`
-		} `json:"train"`
+					Key   string `json:"Key"`
+					Value string `json:"Value"`
+				} `json:"Parameters"`
+				TaskNumber            int `json:"TaskNumber"`
+				MinFailedTaskCount    int `json:"MinFailedTaskCount"`
+				MinSucceededTaskCount int `json:"MinSucceededTaskCount"`
+			} `json:"Config"`
+		} `json:"Train"`
 		Deduce struct {
-			Service string `json:"service"`
-		} `json:"deduce"`
-		ResourcePool string `json:"resourcePool"`
-		UserName     string `json:"userName"`
-	} `json:"payload"`
+			Service string `json:"Service"`
+		} `json:"Deduce"`
+		ResourcePool string `json:"ResourcePool"`
+		UserName     string `json:"UserName"`
+	} `json:"Payload"`
 }
 
 // AI服务报文应答
 type ReqServiceRetMsg struct {
 	BaseRetMsg
 	Payload struct {
-		Demand string `json:"demand"`
-		JobId  string `json:"jobId"`
-		RunSec int64  `json:"runSec"`
-		State  int32  `json:"state"`
-		Info   string `json:"info"`
-		Result string `json:"result"`
-	} `json:"payload"`
+		Demand    string `json:"Demand"`
+		TrainInfo struct {
+			JobID  string `json:"JobID"`
+			RunSec int    `json:"RunSec"`
+			State  int    `json:"State"`
+			Info   string `json:"Info"`
+			Result string `json:"Result"`
+		} `json:"TrainInfo"`
+		DeduceInfo struct {
+		} `json:"DeduceInfo"`
+	} `json:"Payload"`
 }
 
 // AI服务控制报文
 type ControlMsg struct {
 	BaseMsg
 	Payload struct {
-		Id       int64  `json:"id"`
-		JobId    string `json:"jobId"`
-		Demand   string `json:"demand"`
-		UserName string `json:"userName"`
-	} `json:"payload"`
+		ID       int64  `json:"ID"`
+		JobID    string `json:"JobID"`
+		Demand   string `json:"Demand"`
+		UserName string `json:"UserName"`
+	} `json:"Payload"`
 }
 
 // AI服务控制报文应答
 type ControlRetMsg struct {
 	BaseRetMsg
 	Payload struct {
-		Demand   string `json:"demand"`
-		JobId    string `json:"jobId"`
-		RunSec   int64  `json:"runSec"`
-		State    int32  `json:"state"`
-		Info     string `json:"info"`
-		Result   string `json:"result"`
-		CancelAt int64  `json:"cancelAt"`
-	} `json:"payload"`
+		Demand    string `json:"Demand"`
+		JobID     string `json:"JobID"`
+		QueryInfo struct {
+			RunSec int    `json:"RunSec"`
+			State  int    `json:"State"`
+			Info   string `json:"Info"`
+			Result string `json:"Result"`
+		} `json:"QueryInfo"`
+		CancelInfo struct {
+			CancelAt int `json:"CancelAt"`
+		} `json:"CancelInfo"`
+	} `json:"Payload"`
 }
 
-// AI服务通知报文
 type NoticeMsg struct {
 	BaseMsg
 	Payload struct {
+		ID     int    `json:"id"`
 		Demand string `json:"demand"`
-		Id     int64  `json:"id"`
-		JobId  string `json:"JobId"`
-		RunSec int64  `json:"runSec"`
-		State  int32  `json:"state"`
-		Info   string `json:"info"`
-		Result string `json:"result"`
+		Train  struct {
+			JobID  string `json:"jobId"`
+			RunSec int    `json:"runSec"`
+			State  int    `json:"state"`
+			Info   string `json:"info"`
+			Result string `json:"result"`
+		} `json:"train"`
+		Minio struct {
+			EndPoint        string `json:"endPoint"`
+			AccessKeyID     string `json:"accessKeyID"`
+			SecretAccessKey string `json:"secretAccessKey"`
+		} `json:"minio"`
 	} `json:"payload"`
 }
 
@@ -117,7 +129,6 @@ type NoticeRetMsg struct {
 	BaseRetMsg
 	Payload struct {
 		Demand string `json:"demand"`
-		JobId  string `json:"jobId"`
 	} `json:"payload"`
 }
 
