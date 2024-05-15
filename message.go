@@ -78,9 +78,10 @@ type ReqServiceRetMsg struct {
 type ControlMsg struct {
 	BaseMsg
 	Payload struct {
-		ID     int64  `json:"ID"`
-		JobID  string `json:"JobID"`
-		Demand string `json:"Demand"`
+		ID       int64  `json:"ID"`
+		JobID    string `json:"JobID"`
+		Demand   string `json:"Demand"`
+		UserName string `json:"UserName"`
 	} `json:"Payload"`
 }
 
