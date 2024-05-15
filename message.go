@@ -66,8 +66,8 @@ type ReqServiceRetMsg struct {
 		Demand    string `json:"Demand"`
 		TrainInfo struct {
 			JobID  string `json:"JobID"`
-			RunSec int    `json:"RunSec"`
-			State  int    `json:"State"`
+			RunSec int64  `json:"RunSec"`
+			State  int32  `json:"State"`
 			Info   string `json:"Info"`
 			Result string `json:"Result"`
 		} `json:"TrainInfo"`
@@ -94,13 +94,13 @@ type ControlRetMsg struct {
 		Demand    string `json:"Demand"`
 		JobID     string `json:"JobID"`
 		QueryInfo struct {
-			RunSec int    `json:"RunSec"`
-			State  int    `json:"State"`
+			RunSec int64  `json:"RunSec"`
+			State  int32  `json:"State"`
 			Info   string `json:"Info"`
 			Result string `json:"Result"`
 		} `json:"QueryInfo"`
 		CancelInfo struct {
-			CancelAt int `json:"CancelAt"`
+			CancelAt int64 `json:"CancelAt"`
 		} `json:"CancelInfo"`
 	} `json:"Payload"`
 }
@@ -108,12 +108,12 @@ type ControlRetMsg struct {
 type NoticeMsg struct {
 	BaseMsg
 	Payload struct {
-		ID     int    `json:"id"`
+		ID     int64  `json:"id"`
 		Demand string `json:"demand"`
 		Train  struct {
 			JobID  string `json:"jobId"`
-			RunSec int    `json:"runSec"`
-			State  int    `json:"state"`
+			RunSec int64  `json:"runSec"`
+			State  int32  `json:"state"`
 			Info   string `json:"info"`
 			Result string `json:"result"`
 		} `json:"train"`
