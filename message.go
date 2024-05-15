@@ -18,28 +18,28 @@ type MessageCmd string
 type Message Any
 
 type BaseMsg struct {
-	Command MessageCmd `json:"Command"`
+	Command MessageCmd `json:"command"`
 }
 
 type BaseRetMsg struct {
 	BaseMsg
-	RetCode int64  `json:"RetCode"`
-	RetMsg  string `json:"RetMsg"`
+	RetCode int64  `json:"retCode"`
+	RetMsg  string `json:"retMsg"`
 }
 
 // AI服务报文
 type ReqServiceMsg struct {
 	BaseMsg
 	Payload struct {
-		ID     int64  `json:"ID"`
-		Demand string `json:"Demand"`
+		Id     int64  `json:"id"`
+		Demand string `json:"demand"`
 		Train  struct {
-			JobName         string `json:"JobName"`
-			AlgoritmName    string `json:"AlgoritmName"`
-			AlgoritmVersion string `json:"AlgoritmVersion"`
-			ImageName       string `json:"ImageName"`
-			ImageVersion    string `json:"ImageVersion"`
-			DataSetPath     string `json:"DataSetPath"`
+			JobName         string `json:"jobName"`
+			AlgoritmName    string `json:"algoritmName"`
+			AlgoritmVersion string `json:"algoritmVersion"`
+			ImageName       string `json:"imageName"`
+			ImageVersion    string `json:"imageVersion"`
+			DataSetPath     string `json:"dataSetPath"`
 			Config          []struct {
 				Name             string `json:"name"`
 				Command          string `json:"command"`
@@ -51,74 +51,74 @@ type ReqServiceMsg struct {
 				TaskNumber            int `json:"taskNumber"`
 				MinFailedTaskCount    int `json:"minFailedTaskCount"`
 				MinSucceededTaskCount int `json:"minSucceededTaskCount"`
-			} `json:"Config"`
-		} `json:"Train"`
+			} `json:"config"`
+		} `json:"train"`
 		Deduce struct {
-			Service string `json:"Service"`
-		} `json:"Deduce"`
-		ResourcePool string `json:"ResourcePool"`
-		UserName     string `json:"UserName"`
-	} `json:"Payload"`
+			Service string `json:"service"`
+		} `json:"deduce"`
+		ResourcePool string `json:"resourcePool"`
+		UserName     string `json:"userName"`
+	} `json:"payload"`
 }
 
 // AI服务报文应答
 type ReqServiceRetMsg struct {
 	BaseRetMsg
 	Payload struct {
-		Demand string `json:"Demand"`
-		JobID  string `json:"JobID"`
-		RunSec int64  `json:"RunSec"`
-		State  int32  `json:"State"`
-		Info   string `json:"Info"`
-		Result string `json:"Result"`
-	} `json:"Payload"`
+		Demand string `json:"demand"`
+		JobId  string `json:"jobId"`
+		RunSec int64  `json:"runSec"`
+		State  int32  `json:"state"`
+		Info   string `json:"info"`
+		Result string `json:"result"`
+	} `json:"payload"`
 }
 
 // AI服务控制报文
 type ControlMsg struct {
 	BaseMsg
 	Payload struct {
-		ID       int64  `json:"ID"`
-		JobID    string `json:"JobID"`
-		Demand   string `json:"Demand"`
-		UserName string `json:"UserName"`
-	} `json:"Payload"`
+		Id       int64  `json:"id"`
+		JobId    string `json:"jobId"`
+		Demand   string `json:"demand"`
+		UserName string `json:"userName"`
+	} `json:"payload"`
 }
 
 // AI服务控制报文应答
 type ControlRetMsg struct {
 	BaseRetMsg
 	Payload struct {
-		Demand   string `json:"Demand"`
-		JobID    string `json:"JobID"`
-		RunSec   int64  `json:"RunSec"`
-		State    int32  `json:"State"`
-		Info     string `json:"Info"`
-		Result   string `json:"Result"`
-		CancelAt int64  `json:"CancelAt"`
-	} `json:"Payload"`
+		Demand   string `json:"demand"`
+		JobId    string `json:"jobId"`
+		RunSec   int64  `json:"runSec"`
+		State    int32  `json:"state"`
+		Info     string `json:"info"`
+		Result   string `json:"result"`
+		CancelAt int64  `json:"cancelAt"`
+	} `json:"payload"`
 }
 
 // AI服务通知报文
 type NoticeMsg struct {
 	BaseMsg
 	Payload struct {
-		Demand string `json:"Demand"`
-		ID     int64  `json:"ID"`
-		JobID  string `json:"JobID"`
-		RunSec int64  `json:"RunSec"`
-		State  int32  `json:"State"`
-		Info   string `json:"Info"`
-		Result string `json:"Result"`
-	} `json:"Payload"`
+		Demand string `json:"demand"`
+		Id     int64  `json:"id"`
+		JobId  string `json:"JobId"`
+		RunSec int64  `json:"runSec"`
+		State  int32  `json:"state"`
+		Info   string `json:"info"`
+		Result string `json:"result"`
+	} `json:"payload"`
 }
 
 type NoticeRetMsg struct {
 	BaseRetMsg
 	Payload struct {
-		Demand string `json:"Demand"`
-		JobID  string `json:"JobID"`
-	} `json:"Payload"`
+		Demand string `json:"demand"`
+		JobId  string `json:"jobId"`
+	} `json:"payload"`
 }
 
 func CodecMarshal(codec encoding.Codec, msg Any) ([]byte, error) {
