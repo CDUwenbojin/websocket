@@ -50,13 +50,14 @@ func (s *SessionManager) Range(fn func(*Session)) {
 
 func (s *SessionManager) Add(c *Session) {
 	s.mtx.Lock()
-	defer s.mtx.Unlock()
-
+	//defer s.mtx.Unlock()   这里在添加会话时，会处理连接函数，连接函数中有发送消息的函数，而发送消息函数会调用Get(sessionId SessionID)再一次加锁，造成死锁
 	//log.Info("[websocket] add session: ", c.SessionID())
 	s.sessions[c.SessionID()] = c
 
+	s.mtx.Unlock() //在调用连接函数之前解锁
+
 	if s.connectHandler != nil {
-		s.connectHandler(c.SessionID(), true)
+		s.connectHandler(c.SessionID(), true) //连接函数
 	}
 }
 
