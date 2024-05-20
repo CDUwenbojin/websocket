@@ -30,8 +30,8 @@ type BaseRetMsg struct {
 // AI服务报文
 type ReqServiceMsg struct {
 	BaseMsg
+	ID      int64 `json:"ID"`
 	Payload struct {
-		ID     int64  `json:"ID"`
 		Demand string `json:"Demand"`
 		Train  struct {
 			AlgoritmName    string `json:"AlgoritmName"`
@@ -79,8 +79,8 @@ type ReqServiceRetMsg struct {
 // AI服务控制报文
 type ControlMsg struct {
 	BaseMsg
+	ID      int64 `json:"ID"`
 	Payload struct {
-		ID       int64  `json:"ID"`
 		JobID    string `json:"JobID"`
 		Demand   string `json:"Demand"`
 		UserName string `json:"UserName"`
@@ -107,29 +107,164 @@ type ControlRetMsg struct {
 
 type NoticeMsg struct {
 	BaseMsg
+	ID      int64 `json:"ID"`
 	Payload struct {
-		ID     int64  `json:"id"`
-		Demand string `json:"demand"`
+		Demand string `json:"Demand"`
 		Train  struct {
-			JobID  string `json:"jobId"`
-			RunSec int64  `json:"runSec"`
-			State  int32  `json:"state"`
-			Info   string `json:"info"`
-			Result string `json:"result"`
-		} `json:"train"`
+			JobID  string `json:"JobId"`
+			RunSec int64  `json:"RunSec"`
+			State  int32  `json:"State"`
+			Info   string `json:"Info"`
+			Result string `json:"Result"`
+		} `json:"Train"`
 		Minio struct {
-			EndPoint        string `json:"endPoint"`
-			AccessKeyID     string `json:"accessKeyID"`
-			SecretAccessKey string `json:"secretAccessKey"`
-		} `json:"minio"`
-	} `json:"payload"`
+			EndPoint        string `json:"EndPoint"`
+			AccessKeyID     string `json:"AccessKeyID"`
+			SecretAccessKey string `json:"SecretAccessKey"`
+		} `json:"Minio"`
+	} `json:"Payload"`
 }
 
 type NoticeRetMsg struct {
 	BaseRetMsg
 	Payload struct {
-		Demand string `json:"demand"`
-	} `json:"payload"`
+		Demand string `json:"Demand"`
+	} `json:"Payload"`
+}
+
+type InfoMsg struct {
+	BaseMsg
+	ID      int64 `json:"ID"`
+	Payload struct {
+		User string `json:"User"`
+		Name string `json:"Name"`
+		Pass string `json:"Pass"`
+		Type string `json:"Type"`
+		Size string `json:"Size"`
+		Tel  string `json:"Tel"`
+		UID  string `json:"UID"`
+		NID  string `json:"NID"`
+	} `json:"Payload"`
+}
+
+type InfoRetMsg struct {
+	BaseRetMsg
+}
+
+type QueryMsg struct {
+	BaseMsg
+	ID      int64 `json:"ID"`
+	Payload struct {
+		Type      string `json:"Type"`
+		TimeStamp int    `json:"TimeStamp"`
+		NID       string `json:"NID"`
+	} `json:"Payload"`
+}
+
+type QueryRetMsg struct {
+	BaseRetMsg
+	Payload struct {
+		Type        string `json:"Type"`
+		Number      int    `json:"Number"`
+		NID         string `json:"NID"`
+		Description string `json:"Description"`
+		FreeGPU     int    `json:"FreeGPU"`
+		GPU         int    `json:"GPU"`
+		Contact     string `json:"Contact"`
+		Information string `json:"Information"`
+		Content     []struct {
+			Element struct {
+				Count        int    `json:"Count"`
+				Price        int    `json:"Price"`
+				TimeStamp    int    `json:"TimeStamp"`
+				Url          string `json:"Url"`
+				Introduction string `json:"Introduction"`
+				Mode         int    `json:"Mode"`
+			} `json:"Element"`
+			Resource struct {
+				Count     int `json:"Count"`
+				Price     int `json:"Price"`
+				TimeStamp int `json:"TimeStamp"`
+				Mode      int `json:"Mode"`
+			} `json:"Resource"`
+			Task struct {
+				TID         string `json:"TID"`
+				UID         string `json:"UID"`
+				State       int    `json:"state"`
+				Timestamp   int    `json:"Timestamp"`
+				Description string `json:"Description"`
+			} `json:"Task"`
+			Node struct {
+				Device   string `json:"Device"`
+				CPU      string `json:"CPU"`
+				Memory   string `json:"Memory"`
+				Resource string `json:"resource"`
+			} `json:"Node"`
+		} `json:"Content"`
+	} `json:"Payload"`
+}
+
+type ElementMsg struct {
+	BaseMsg
+	ID      int64 `json:"ID"`
+	Payload struct {
+		Type        string `json:"Type"`
+		Number      int    `json:"Number"`
+		NID         string `json:"NID"`
+		Contact     string `json:"Contact"`
+		Information string `json:"Information"`
+		Content     []struct {
+			Count        int    `json:"Count"`
+			Price        int    `json:"Price"`
+			TimeStamp    int    `json:"TimeStamp"`
+			Url          string `json:"Url"`
+			Introduction string `json:"Introduction"`
+			Mode         int    `json:"Mode"`
+		} `json:"Content"`
+	} `json:"Payload"`
+}
+
+type ElementRetMsg struct {
+	BaseRetMsg
+}
+
+type TaskMsg struct {
+	Command string `json:"Command"`
+	ID      int64  `json:"ID"`
+	Payload struct {
+		NID     string `json:"NID"`
+		Content []struct {
+			TID         string `json:"TID"`
+			UID         string `json:"UID"`
+			State       int    `json:"State"`
+			Timestamp   int    `json:"Timestamp"`
+			Description string `json:"Description"`
+		} `json:"Content"`
+	} `json:"Payload"`
+}
+
+type TaskRetMsg struct {
+	BaseRetMsg
+}
+
+type NodeMsg struct {
+	Command string `json:"Command"`
+	ID      int64  `json:"ID"`
+	Payload struct {
+		Number      int    `json:"Number"`
+		NID         string `json:"NID"`
+		Description string `json:"Description"`
+		Content     []struct {
+			Device   string `json:"Device"`
+			CPU      int    `json:"CPU"`
+			Memory   int    `json:"Memory"`
+			Resource string `json:"Resource"`
+		} `json:"Content"`
+	} `json:"Payload"`
+}
+
+type NodeRetMsg struct {
+	BaseRetMsg
 }
 
 func CodecMarshal(codec encoding.Codec, msg Any) ([]byte, error) {

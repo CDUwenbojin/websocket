@@ -48,7 +48,7 @@ func TestClient(t *testing.T) {
 	signal.Notify(interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
 	cli := NewClient(
-		WithEndpoint("ws://localhost:9081/openai"),
+		WithEndpoint("ws://localhost:10028/"),
 		WithClientCodec("json"),
 		WithClientPayloadType(MsgTypeBinary),
 	)
@@ -61,6 +61,10 @@ func TestClient(t *testing.T) {
 	RegisterClientMessageHandler(cli, "notice", handleNoticeMsg)
 
 	err := cli.Connect()
+	cli.url = "ws://localhost:10029/"
+
+	cli.Connect()
+
 	if err != nil {
 		t.Error(err)
 	}
