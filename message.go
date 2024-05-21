@@ -247,6 +247,12 @@ type TaskRetMsg struct {
 	BaseRetMsg
 }
 
+type Node struct {
+	Device   string `json:"Device"`
+	CPU      int    `json:"CPU"`
+	Memory   int    `json:"Memory"`
+	Resource string `json:"Resource"`
+}
 type NodeMsg struct {
 	Command string `json:"Command"`
 	ID      int64  `json:"ID"`
@@ -254,12 +260,7 @@ type NodeMsg struct {
 		Number      int    `json:"Number"`
 		NID         string `json:"NID"`
 		Description string `json:"Description"`
-		Content     []struct {
-			Device   string `json:"Device"`
-			CPU      int    `json:"CPU"`
-			Memory   int    `json:"Memory"`
-			Resource string `json:"Resource"`
-		} `json:"Content"`
+		Content     []Node `json:"Content"`
 	} `json:"Payload"`
 }
 
