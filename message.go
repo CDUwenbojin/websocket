@@ -228,18 +228,19 @@ type ElementRetMsg struct {
 	BaseRetMsg
 }
 
+type Task struct {
+	TID         string `json:"TID"`
+	UID         string `json:"UID"`
+	State       int    `json:"State"`
+	Timestamp   int    `json:"Timestamp"`
+	Description string `json:"Description"`
+}
 type TaskMsg struct {
 	Command string `json:"Command"`
 	ID      int64  `json:"ID"`
 	Payload struct {
 		NID     string `json:"NID"`
-		Content []struct {
-			TID         string `json:"TID"`
-			UID         string `json:"UID"`
-			State       int    `json:"State"`
-			Timestamp   int    `json:"Timestamp"`
-			Description string `json:"Description"`
-		} `json:"Content"`
+		Content []Task `json:"Content"`
 	} `json:"Payload"`
 }
 
