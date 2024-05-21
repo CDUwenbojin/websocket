@@ -231,8 +231,8 @@ type ElementRetMsg struct {
 type Task struct {
 	TID         string `json:"TID"`
 	UID         string `json:"UID"`
-	State       int    `json:"State"`
-	Timestamp   int    `json:"Timestamp"`
+	State       int32  `json:"State"`
+	Timestamp   int64  `json:"Timestamp"`
 	Description string `json:"Description"`
 }
 type TaskMsg struct {
