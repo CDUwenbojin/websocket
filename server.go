@@ -5,13 +5,14 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/transport"
 	"net"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/transport"
 
 	"github.com/go-kratos/kratos/v2/encoding"
 	ws "github.com/gorilla/websocket"
@@ -269,7 +270,6 @@ func (s *Server) wsHandler(res http.ResponseWriter, req *http.Request) {
 	session.server.register <- session
 
 	session.Listen()
-	return
 }
 
 func (s *Server) listen() error {

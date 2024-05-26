@@ -2,6 +2,7 @@ package websocket
 
 import (
 	"fmt"
+
 	"github.com/google/uuid"
 	ws "github.com/gorilla/websocket"
 )
@@ -108,13 +109,11 @@ func (c *Session) writePump() error {
 				if err = c.sendBinaryMessage(msg); err != nil {
 					return err
 				}
-				break
 
 			case MsgTypeText:
 				if err = c.sendTextMessage(string(msg)); err != nil {
 					return err
 				}
-				break
 			}
 
 		}
@@ -143,21 +142,17 @@ func (c *Session) readPump() {
 
 		case ws.BinaryMessage:
 			_ = c.server.messageHandler(c.SessionID(), data)
-			break
 
 		case ws.TextMessage:
 			_ = c.server.messageHandler(c.SessionID(), data)
-			break
 
 		case ws.PingMessage:
 			if err = c.sendPongMessage(""); err != nil {
 				fmt.Println("write pong message error: ", err)
 				return
 			}
-			break
 
 		case ws.PongMessage:
-			break
 		}
 
 	}
