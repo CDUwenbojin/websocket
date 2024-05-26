@@ -156,25 +156,25 @@ type QueryMsg struct {
 	ID      int64 `json:"ID"`
 	Payload struct {
 		Type      string `json:"Type"`
-		TimeStamp int    `json:"TimeStamp"`
+		TimeStamp int64  `json:"TimeStamp"`
 		NID       string `json:"NID"`
 	} `json:"Payload"`
 }
 
 type Element struct {
-	Count        int    `json:"Count"`
-	Price        int    `json:"Price"`
-	TimeStamp    int    `json:"TimeStamp"`
+	Count        int64  `json:"Count"`
+	Price        int64  `json:"Price"`
+	TimeStamp    int64  `json:"TimeStamp"`
 	Url          string `json:"Url"`
 	Introduction string `json:"Introduction"`
-	Mode         int    `json:"Mode"`
+	Mode         int32  `json:"Mode"`
 }
 
 type Resource struct {
-	Count     int `json:"Count"`
-	Price     int `json:"Price"`
-	TimeStamp int `json:"TimeStamp"`
-	Mode      int `json:"Mode"`
+	Count     int64 `json:"Count"`
+	Price     int64 `json:"Price"`
+	TimeStamp int64 `json:"TimeStamp"`
+	Mode      int32 `json:"Mode"`
 }
 
 type QueryRetMsg struct {
