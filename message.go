@@ -161,6 +161,22 @@ type QueryMsg struct {
 	} `json:"Payload"`
 }
 
+type Element struct {
+	Count        int    `json:"Count"`
+	Price        int    `json:"Price"`
+	TimeStamp    int    `json:"TimeStamp"`
+	Url          string `json:"Url"`
+	Introduction string `json:"Introduction"`
+	Mode         int    `json:"Mode"`
+}
+
+type Resource struct {
+	Count     int `json:"Count"`
+	Price     int `json:"Price"`
+	TimeStamp int `json:"TimeStamp"`
+	Mode      int `json:"Mode"`
+}
+
 type QueryRetMsg struct {
 	BaseRetMsg
 	Payload struct {
@@ -172,34 +188,11 @@ type QueryRetMsg struct {
 		GPU         int    `json:"GPU"`
 		Contact     string `json:"Contact"`
 		Information string `json:"Information"`
-		Content     []struct {
-			Element struct {
-				Count        int    `json:"Count"`
-				Price        int    `json:"Price"`
-				TimeStamp    int    `json:"TimeStamp"`
-				Url          string `json:"Url"`
-				Introduction string `json:"Introduction"`
-				Mode         int    `json:"Mode"`
-			} `json:"Element"`
-			Resource struct {
-				Count     int `json:"Count"`
-				Price     int `json:"Price"`
-				TimeStamp int `json:"TimeStamp"`
-				Mode      int `json:"Mode"`
-			} `json:"Resource"`
-			Task struct {
-				TID         string `json:"TID"`
-				UID         string `json:"UID"`
-				State       int    `json:"state"`
-				Timestamp   int    `json:"Timestamp"`
-				Description string `json:"Description"`
-			} `json:"Task"`
-			Node struct {
-				Device   string `json:"Device"`
-				CPU      string `json:"CPU"`
-				Memory   string `json:"Memory"`
-				Resource string `json:"resource"`
-			} `json:"Node"`
+		Content     struct {
+			Element  []Element  `json:"Element"`
+			Resource []Resource `json:"Resource"`
+			Task     []Task     `json:"Task"`
+			Node     []Node     `json:"Node"`
 		} `json:"Content"`
 	} `json:"Payload"`
 }
@@ -208,19 +201,12 @@ type ElementMsg struct {
 	BaseMsg
 	ID      int64 `json:"ID"`
 	Payload struct {
-		Type        string `json:"Type"`
-		Number      int    `json:"Number"`
-		NID         string `json:"NID"`
-		Contact     string `json:"Contact"`
-		Information string `json:"Information"`
-		Content     []struct {
-			Count        int    `json:"Count"`
-			Price        int    `json:"Price"`
-			TimeStamp    int    `json:"TimeStamp"`
-			Url          string `json:"Url"`
-			Introduction string `json:"Introduction"`
-			Mode         int    `json:"Mode"`
-		} `json:"Content"`
+		Type        string    `json:"Type"`
+		Number      int       `json:"Number"`
+		NID         string    `json:"NID"`
+		Contact     string    `json:"Contact"`
+		Information string    `json:"Information"`
+		Content     []Element `json:"Content"`
 	} `json:"Payload"`
 }
 
