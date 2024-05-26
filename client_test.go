@@ -38,17 +38,17 @@ func handleNoticeMsg(message *NoticeMsg) error {
 	return nil
 }
 
-func sendMessage(msg interface{}) error {
-	fmt.Printf("发送消息: %v\n", msg)
-	return testClient.SendMessage(msg)
-}
+// func sendMessage(msg interface{}) error {
+// 	fmt.Printf("发送消息: %v\n", msg)
+// 	return testClient.SendMessage(msg)
+// }
 
 func TestClient(t *testing.T) {
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
 	cli := NewClient(
-		WithEndpoint("ws://localhost:10028/"),
+		WithEndpoint("ws://localhost:10026/"),
 		WithClientCodec("json"),
 		WithClientPayloadType(MsgTypeBinary),
 	)

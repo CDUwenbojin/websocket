@@ -3,10 +3,11 @@ package websocket
 import (
 	"errors"
 	"fmt"
-	"github.com/go-kratos/kratos/v2/encoding"
-	"github.com/go-kratos/kratos/v2/log"
 	"net/url"
 	"time"
+
+	"github.com/go-kratos/kratos/v2/encoding"
+	"github.com/go-kratos/kratos/v2/log"
 
 	ws "github.com/gorilla/websocket"
 
@@ -128,13 +129,11 @@ func (c *Client) SendMessage(message interface{}) error {
 		if err = c.sendBinaryMessage(buff); err != nil {
 			return err
 		}
-		break
 
 	case MsgTypeText:
 		if err = c.sendTextMessage(string(buff)); err != nil {
 			return err
 		}
-		break
 	}
 
 	return nil
@@ -174,21 +173,18 @@ func (c *Client) run() {
 
 		case ws.BinaryMessage:
 			_ = c.messageHandler(data)
-			break
 
 		case ws.TextMessage:
 			_ = c.messageHandler(data)
-			break
 
 		case ws.PingMessage:
 			if err := c.sendPongMessage(""); err != nil {
 				fmt.Println("write pong message error: ", err)
 				return
 			}
-			break
 
 		case ws.PongMessage:
-			break
+
 		}
 
 	}

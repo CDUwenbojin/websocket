@@ -302,12 +302,10 @@ func LengthMarshal(OriginalMsg []byte, msgType MsgType) ([]byte, error) {
 			return nil, err
 		}
 		buf.Write(OriginalMsg)
-		break
 	case MsgTypeText:
 		lengthStr := fmt.Sprintf("%04d", len(OriginalMsg))
 		buf.Write([]byte(lengthStr))
 		buf.Write(OriginalMsg)
-		break
 	default:
 		return nil, errors.New("invalid msg type")
 	}
@@ -327,8 +325,6 @@ func LengthUnmarshal(MsgWithLength []byte, msgType MsgType) ([]byte, uint32, err
 		if err := binary.Read(network, binary.LittleEndian, &length32); err != nil {
 			return nil, 0, err
 		}
-
-		break
 	case MsgTypeText:
 		lengthStr := string(network.Next(4))
 		length, err := strconv.Atoi(lengthStr)
@@ -336,7 +332,6 @@ func LengthUnmarshal(MsgWithLength []byte, msgType MsgType) ([]byte, uint32, err
 			return nil, 0, err
 		}
 		length32 = uint32(length)
-		break
 	default:
 		return nil, 0, errors.New("invalid msg type")
 	}
