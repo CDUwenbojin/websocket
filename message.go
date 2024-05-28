@@ -170,10 +170,10 @@ type Element struct {
 }
 
 type Resource struct {
-	Count     int64 `json:"Count"`
-	Price     int64 `json:"Price"`
-	TimeStamp int64 `json:"TimeStamp"`
-	Mode      int32 `json:"Mode"`
+	Name             string            `json:"name"`
+	Price            int64             `json:"price"`
+	Mode             int32             `json:"mode"`
+	ResourceQuantity map[string]string `json:"resourceQuantity"`
 }
 
 type QueryRetMsg struct {
@@ -245,6 +245,10 @@ type NodeMsg struct {
 	Payload struct {
 		Number      int    `json:"Number"`
 		NID         string `json:"NID"`
+		FreeGPU     int    `json:"FreeGPU"`
+		GPU         int    `json:"GPU"`
+		Contact     string `json:"Contact"`
+		Information string `json:"Information"`
 		Description string `json:"Description"`
 		Content     []Node `json:"Content"`
 	} `json:"Payload"`
