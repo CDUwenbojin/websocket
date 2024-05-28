@@ -200,12 +200,15 @@ type ElementMsg struct {
 	BaseMsg
 	ID      int64 `json:"ID"`
 	Payload struct {
-		Type        string    `json:"Type"`
-		Number      int       `json:"Number"`
-		NID         string    `json:"NID"`
-		Contact     string    `json:"Contact"`
-		Information string    `json:"Information"`
-		Content     []Element `json:"Content"`
+		Type        string `json:"Type"`
+		Number      int    `json:"Number"`
+		NID         string `json:"NID"`
+		Contact     string `json:"Contact"`
+		Information string `json:"Information"`
+		Content     struct {
+			Element  []Element  `json:"Element"`
+			Resource []Resource `json:"Resource"`
+		} `json:"Content"`
 	} `json:"Payload"`
 }
 
