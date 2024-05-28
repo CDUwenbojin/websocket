@@ -136,14 +136,13 @@ type InfoMsg struct {
 	BaseMsg
 	ID      int64 `json:"ID"`
 	Payload struct {
-		User string `json:"User"`
-		Name string `json:"Name"`
-		Pass string `json:"Pass"`
-		Type string `json:"Type"`
-		Size string `json:"Size"`
-		Tel  string `json:"Tel"`
-		UID  string `json:"UID"`
-		NID  string `json:"NID"`
+		User         string `json:"User"`
+		Name         string `json:"Name"`
+		Pass         string `json:"Pass"`
+		ResourceSpec string `json:"ResourceSpec"`
+		Tel          string `json:"Tel"`
+		UID          string `json:"UID"`
+		NID          string `json:"NID"`
 	} `json:"Payload"`
 }
 
