@@ -170,10 +170,10 @@ type Element struct {
 }
 
 type Resource struct {
-	Name             string            `json:"name"`
-	Price            int64             `json:"price"`
-	Mode             int32             `json:"mode"`
-	ResourceQuantity map[string]string `json:"resourceQuantity"`
+	Name             string            `json:"Name"`
+	Price            int64             `json:"Price"`
+	Mode             int32             `json:"Mode"`
+	ResourceQuantity map[string]string `json:"ResourceQuantity"`
 }
 
 type QueryRetMsg struct {
