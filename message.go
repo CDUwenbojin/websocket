@@ -132,6 +132,17 @@ type NoticeRetMsg struct {
 	} `json:"Payload"`
 }
 
+type LoginMsg struct {
+	BaseMsg
+	ID      int64 `json:"ID"`
+	Payload struct {
+		NID string `json:"NID"`
+	} `json:"Payload"`
+}
+type LoginRetMsg struct {
+	BaseRetMsg
+}
+
 type InfoMsg struct {
 	BaseMsg
 	ID      int64 `json:"ID"`
