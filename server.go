@@ -201,7 +201,7 @@ func (s *Server) marshalMessage(message Message) ([]byte, error) {
 	return codecJsonMsg, nil
 }
 
-func (s *Server) unmarshalMessage(msgWithLength []byte) (*HandlerData, Message, error) {
+func (s *Server) unmarshalMessage(msg []byte) (*HandlerData, Message, error) {
 	var (
 		//	msgWithoutLength []byte
 		//	length           uint32
@@ -221,7 +221,7 @@ func (s *Server) unmarshalMessage(msgWithLength []byte) (*HandlerData, Message, 
 	//	return nil, nil, fmt.Errorf("incomplete message")
 	//}
 
-	err = CodecUnmarshal(s.codec, msgWithLength, &baseMsg)
+	err = CodecUnmarshal(s.codec, msg, &baseMsg)
 	if err != nil {
 		return nil, nil, fmt.Errorf("parse the Json command failed:%v", err)
 	}
@@ -233,7 +233,7 @@ func (s *Server) unmarshalMessage(msgWithLength []byte) (*HandlerData, Message, 
 
 	if handler.Binder != nil {
 		message = handler.Binder()
-		err = CodecUnmarshal(s.codec, msgWithLength, &message)
+		err = CodecUnmarshal(s.codec, msg, &message)
 		if err != nil {
 			return nil, nil, fmt.Errorf("parse the Json failed:%v", err)
 		}
