@@ -145,15 +145,16 @@ type LoginRetMsg struct {
 
 type InfoMsg struct {
 	BaseMsg
-	ID      int64 `json:"ID"`
+	ID      int `json:"ID"`
 	Payload struct {
-		User         string `json:"User"`
-		Name         string `json:"Name"`
-		Pass         string `json:"Pass"`
-		ResourceSpec string `json:"ResourceSpec"`
-		Tel          string `json:"Tel"`
-		UID          string `json:"UID"`
-		NID          string `json:"NID"`
+		User string `json:"User"`
+		Name string `json:"Name"`
+		Pass string `json:"Pass"`
+		Type string `json:"Type"`
+		Size int    `json:"Size"`
+		Tel  string `json:"Tel"`
+		UID  string `json:"UID"`
+		NID  string `json:"NID"`
 	} `json:"Payload"`
 }
 
@@ -172,6 +173,8 @@ type QueryMsg struct {
 }
 
 type Element struct {
+	ID           string `json:"ID"`
+	Name         string `json:"Name"`
 	Count        int64  `json:"Count"`
 	Price        int64  `json:"Price"`
 	TimeStamp    int64  `json:"TimeStamp"`
@@ -179,7 +182,6 @@ type Element struct {
 	Introduction string `json:"Introduction"`
 	Mode         int32  `json:"Mode"`
 }
-
 type Resource struct {
 	Price     int64 `json:"Price"`
 	TimeStamp int64 `json:"TimeStamp"`
@@ -230,7 +232,7 @@ type ElementRetMsg struct {
 type Task struct {
 	TID         string `json:"TID"`
 	UID         string `json:"UID"`
-	State       int32  `json:"State"`
+	State       string `json:"State"`
 	Timestamp   int64  `json:"Timestamp"`
 	Description string `json:"Description"`
 }
