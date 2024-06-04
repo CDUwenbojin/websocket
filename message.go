@@ -19,6 +19,7 @@ type Message Any
 
 type BaseMsg struct {
 	Command MessageCmd `json:"Command"`
+	ID      int64      `json:"ID"`
 }
 
 type BaseRetMsg struct {
@@ -30,7 +31,6 @@ type BaseRetMsg struct {
 // AI服务报文
 type ReqServiceMsg struct {
 	BaseMsg
-	ID      int64 `json:"ID"`
 	Payload struct {
 		Demand string `json:"Demand"`
 		Train  struct {
@@ -79,7 +79,6 @@ type ReqServiceRetMsg struct {
 // AI服务控制报文
 type ControlMsg struct {
 	BaseMsg
-	ID      int64 `json:"ID"`
 	Payload struct {
 		JobID    string `json:"JobID"`
 		Demand   string `json:"Demand"`
@@ -107,7 +106,6 @@ type ControlRetMsg struct {
 
 type NoticeMsg struct {
 	BaseMsg
-	ID      int64 `json:"ID"`
 	Payload struct {
 		Demand string `json:"Demand"`
 		Train  struct {
@@ -134,7 +132,6 @@ type NoticeRetMsg struct {
 
 type LoginMsg struct {
 	BaseMsg
-	ID      int64 `json:"ID"`
 	Payload struct {
 		NID string `json:"NID"`
 	} `json:"Payload"`
@@ -145,7 +142,6 @@ type LoginRetMsg struct {
 
 type InfoMsg struct {
 	BaseMsg
-	ID      int `json:"ID"`
 	Payload struct {
 		User string `json:"User"`
 		Name string `json:"Name"`
@@ -167,7 +163,6 @@ type InfoRetMsg struct {
 
 type QueryMsg struct {
 	BaseMsg
-	ID      int64 `json:"ID"`
 	Payload struct {
 		Type      string `json:"Type"`
 		TimeStamp int64  `json:"TimeStamp"`
@@ -214,7 +209,6 @@ type QueryRetMsg struct {
 
 type ElementMsg struct {
 	BaseMsg
-	ID      int64 `json:"ID"`
 	Payload struct {
 		Type        string `json:"Type"`
 		Number      int    `json:"Number"`
@@ -240,8 +234,7 @@ type Task struct {
 	Description string `json:"Description"`
 }
 type TaskMsg struct {
-	Command string `json:"Command"`
-	ID      int64  `json:"ID"`
+	BaseMsg
 	Payload struct {
 		NID     string `json:"NID"`
 		Content []Task `json:"Content"`
@@ -260,7 +253,6 @@ type Node struct {
 }
 type NodeMsg struct {
 	BaseMsg
-	ID      int64 `json:"ID"`
 	Payload struct {
 		Number      int    `json:"Number"`
 		NID         string `json:"NID"`
