@@ -160,6 +160,9 @@ type InfoMsg struct {
 
 type InfoRetMsg struct {
 	BaseRetMsg
+	Payload struct {
+		NID string `json:"NID"`
+	} `json:"Payload"`
 }
 
 type QueryMsg struct {
@@ -256,8 +259,8 @@ type Node struct {
 	Resource string `json:"Resource"`
 }
 type NodeMsg struct {
-	Command string `json:"Command"`
-	ID      int64  `json:"ID"`
+	BaseMsg
+	ID      int64 `json:"ID"`
 	Payload struct {
 		Number      int    `json:"Number"`
 		NID         string `json:"NID"`
