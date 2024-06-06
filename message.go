@@ -183,10 +183,10 @@ type Element struct {
 type Resource struct {
 	ID        string `json:"ID"`
 	Type      string `json:"Type"`
-	Count     int    `json:"Count"`
-	Price     int    `json:"Price"`
-	TimeStamp int    `json:"TimeStamp"`
-	Mode      int    `json:"Mode"`
+	Count     int64  `json:"Count"`
+	Price     int64  `json:"Price"`
+	TimeStamp int64  `json:"TimeStamp"`
+	Mode      int32  `json:"Mode"`
 }
 
 type QueryRetMsg struct {
