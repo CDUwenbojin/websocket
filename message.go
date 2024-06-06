@@ -143,14 +143,13 @@ type LoginRetMsg struct {
 type InfoMsg struct {
 	BaseMsg
 	Payload struct {
-		User string `json:"User"`
-		Name string `json:"Name"`
-		Pass string `json:"Pass"`
-		Type string `json:"Type"`
-		Size int    `json:"Size"`
-		Tel  string `json:"Tel"`
-		UID  string `json:"UID"`
-		NID  string `json:"NID"`
+		User       string `json:"User"`
+		Name       string `json:"Name"`
+		Pass       string `json:"Pass"`
+		ResourceID string `json:"ResourceID"`
+		Tel        string `json:"Tel"`
+		UID        string `json:"UID"`
+		NID        string `json:"NID"`
 	} `json:"Payload"`
 }
 
@@ -180,11 +179,14 @@ type Element struct {
 	Introduction string `json:"Introduction"`
 	Mode         int32  `json:"Mode"`
 }
+
 type Resource struct {
-	Price     int64 `json:"Price"`
-	TimeStamp int64 `json:"TimeStamp"`
-	Mode      int32 `json:"Mode"`
-	Count     int64 `json:"Count"`
+	ID        string `json:"ID"`
+	Type      string `json:"Type"`
+	Count     int    `json:"Count"`
+	Price     int    `json:"Price"`
+	TimeStamp int    `json:"TimeStamp"`
+	Mode      int    `json:"Mode"`
 }
 
 type QueryRetMsg struct {
