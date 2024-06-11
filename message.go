@@ -239,7 +239,9 @@ type TaskMsg struct {
 	BaseMsg
 	Payload struct {
 		NID     string `json:"NID"`
-		Content []Task `json:"Content"`
+		Content struct {
+			Task []Task `json:"Task"`
+		} `json:"Content"`
 	} `json:"Payload"`
 }
 
@@ -249,6 +251,7 @@ type TaskRetMsg struct {
 
 type Node struct {
 	Device   string `json:"Device"`
+	Status   int    `json:"Status"`
 	CPU      int    `json:"CPU"`
 	Memory   int    `json:"Memory"`
 	Resource string `json:"Resource"`
@@ -263,7 +266,9 @@ type NodeMsg struct {
 		Contact     string `json:"Contact"`
 		Information string `json:"Information"`
 		Description string `json:"Description"`
-		Content     []Node `json:"Content"`
+		Content     struct {
+			Node []Node `json:"Node"`
+		} `json:"Content"`
 	} `json:"Payload"`
 }
 
