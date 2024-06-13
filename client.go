@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"sync"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/encoding"
@@ -24,15 +25,17 @@ type ClientHandlerData struct {
 type ClientMessageHandlerMap map[MessageCmd]*ClientHandlerData
 
 type Client struct {
-	conn *ws.Conn
-
-	url      string
-	endpoint *url.URL
+	conn        *ws.Conn
+	isConnected bool
+	url         string
+	endpoint    *url.URL
 
 	codec           encoding.Codec
 	messageHandlers ClientMessageHandlerMap
 
 	timeout time.Duration
+	// 加锁避免重复关闭管道
+	connMu *sync.RWMutex
 
 	msgType MsgType
 	log     *log.Helper
@@ -45,6 +48,7 @@ func NewClient(opts ...ClientOption) *Client {
 		codec:           encoding.GetCodec("json"),
 		messageHandlers: make(ClientMessageHandlerMap),
 		msgType:         MsgTypeBinary,
+		connMu:          &sync.RWMutex{},
 		log:             log.NewHelper(loggerName, log.DefaultLogger),
 	}
 
@@ -61,6 +65,13 @@ func (c *Client) init(opts ...ClientOption) {
 	c.endpoint, _ = url.Parse(c.url)
 }
 
+func (c *Client) setIsConnected(isConnected bool) {
+	// 变更连接状态
+	c.connMu.Lock()
+	c.isConnected = isConnected
+	c.connMu.Unlock()
+}
+
 func (c *Client) Connect() error {
 	if c.endpoint == nil {
 		return errors.New("endpoint is nil")
@@ -75,6 +86,8 @@ func (c *Client) Connect() error {
 	}
 	c.conn = conn
 
+	c.setIsConnected(true)
+
 	go c.run()
 
 	return nil
@@ -87,6 +100,8 @@ func (c *Client) Disconnect() {
 		}
 		c.conn = nil
 	}
+	// 变更连接状态
+	c.setIsConnected(false)
 }
 
 func (c *Client) RegisterMessageHandler(cmd MessageCmd, handler ClientMessageHandler, binder Binder) {
@@ -119,6 +134,9 @@ func (c *Client) DeregisterMessageHandler(cmd MessageCmd) {
 }
 
 func (c *Client) SendMessage(message interface{}) error {
+	if !c.isConnected {
+		return errors.New("the client is not connected to the server")
+	}
 	buff, err := c.marshalMessage(message)
 	if err != nil {
 		return err
@@ -164,9 +182,9 @@ func (c *Client) run() {
 			if ws.IsUnexpectedCloseError(err, ws.CloseNormalClosure, ws.CloseGoingAway, ws.CloseAbnormalClosure) {
 				c.log.Errorf("read message error: %v", err)
 			}
+			c.setIsConnected(false)
 			return
 		}
-
 		switch messageType {
 		case ws.CloseMessage:
 			return
@@ -179,7 +197,7 @@ func (c *Client) run() {
 
 		case ws.PingMessage:
 			if err := c.sendPongMessage(""); err != nil {
-				fmt.Println("write pong message error: ", err)
+				c.log.Errorf("write pong message error: %v", err)
 				return
 			}
 

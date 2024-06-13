@@ -10,6 +10,7 @@ import (
 	"os/signal"
 	"syscall"
 	"testing"
+	"time"
 )
 
 var testClient *Client
@@ -43,12 +44,13 @@ func handleNoticeMsg(message *NoticeMsg) error {
 // 	return testClient.SendMessage(msg)
 // }
 
+
 func TestClient(t *testing.T) {
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
 	cli := NewClient(
-		WithEndpoint("ws://localhost:10026/"),
+		WithEndpoint("ws://localhost:10031/"),
 		WithClientCodec("json"),
 		WithClientPayloadType(MsgTypeBinary),
 	)
@@ -61,12 +63,22 @@ func TestClient(t *testing.T) {
 	RegisterClientMessageHandler(cli, "notice", handleNoticeMsg)
 
 	err := cli.Connect()
-	cli.url = "ws://localhost:10029/"
-
-	cli.Connect()
 
 	if err != nil {
 		t.Error(err)
+	}
+
+	ticker := time.NewTicker(60 * time.Second)
+	for {
+		select {
+		case <-ticker.C:
+			no := &NoticeRetMsg{}
+			no.Command = "noticeRet"
+			err = cli.SendMessage(no)
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
 	}
 
 	<-interrupt

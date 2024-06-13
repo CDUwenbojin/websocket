@@ -47,7 +47,7 @@ func TestServer(t *testing.T) {
 	signal.Notify(interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
 	srv := NewServer(
-		WithAddress(":10026"),
+		WithAddress(":10031"),
 		WithPath("/"),
 		WithConnectHandle(handleConnect),
 		WithCodec("json"),
