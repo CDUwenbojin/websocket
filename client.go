@@ -72,6 +72,12 @@ func (c *Client) setIsConnected(isConnected bool) {
 	c.connMu.Unlock()
 }
 
+func (c *Client) GetIsConnected() bool {
+	defer c.connMu.Unlock()
+	c.connMu.Lock()
+	return c.isConnected
+}
+
 func (c *Client) Connect() error {
 	if c.endpoint == nil {
 		return errors.New("endpoint is nil")
